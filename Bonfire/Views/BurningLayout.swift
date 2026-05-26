@@ -6,12 +6,31 @@ struct BurningLayout: View {
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 8) {
                 Image(systemName: "flame.fill")
-                Text("Bonfire — Burning").font(.headline)
+                    .foregroundStyle(.orange)
+                Text("Bonfire").font(.headline)
+                Text("Burning")
+                    .font(.subheadline)
+                    .foregroundStyle(.orange)
+                Spacer()
             }
-            statusLine
+
+            VStack(alignment: .leading, spacing: 4) {
+                if let remaining = controller.state.timeLeft(now: now) {
+                    Text(BurningLayout.formatRemaining(remaining))
+                        .font(.system(size: 28, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
+                } else {
+                    Text("No timer")
+                        .font(.system(size: 28, weight: .semibold, design: .rounded))
+                }
+                Text("Running for \(BurningLayout.formatElapsed(controller.state.runningTime(now: now) ?? 0))")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
             Button(role: .destructive) {
                 controller.stop(reason: .userRequested)
             } label: {
@@ -22,16 +41,8 @@ struct BurningLayout: View {
             .buttonStyle(.borderedProminent)
         }
         .padding(16)
-        .frame(width: 280)
+        .frame(width: 340)
         .onReceive(ticker) { now = $0 }
-    }
-
-    @ViewBuilder private var statusLine: some View {
-        let elapsed = controller.state.runningTime(now: now)
-        let remaining = controller.state.timeLeft(now: now)
-        Text("Running \(BurningLayout.formatElapsed(elapsed ?? 0)) · \(BurningLayout.formatRemaining(remaining))")
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
     }
 
     static func formatElapsed(_ seconds: TimeInterval) -> String {
