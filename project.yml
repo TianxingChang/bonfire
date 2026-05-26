@@ -1,0 +1,62 @@
+name: Bonfire
+options:
+  bundleIdPrefix: ai.dotwise
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: YES
+
+targets:
+  Bonfire:
+    type: application
+    platform: macOS
+    sources:
+      - Bonfire
+    info:
+      path: Bonfire/Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleName: Bonfire
+        CFBundleDisplayName: Bonfire
+        NSHumanReadableCopyright: "© 2026"
+    entitlements:
+      path: Bonfire/Bonfire.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.dotwise.Bonfire
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Bonfire/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Bonfire/Bonfire.entitlements
+
+  BonfireTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - BonfireTests
+    dependencies:
+      - target: Bonfire
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: ai.dotwise.BonfireTests
+
+schemes:
+  Bonfire:
+    build:
+      targets:
+        Bonfire: all
+        BonfireTests: [test]
+    test:
+      targets:
+        - BonfireTests
