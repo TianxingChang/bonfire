@@ -24,6 +24,16 @@ struct BurningLayout: View {
                     .foregroundStyle(.secondary)
             }
 
+            Button {
+                Display.sleepNow()
+            } label: {
+                Label("Turn off display", systemImage: "moon.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .controlSize(.large)
+            .buttonStyle(.bordered)
+            .help("Turns the screen off without stopping. Move mouse / press a key to wake the display.")
+
             Button(role: .destructive) {
                 controller.stop(reason: .userRequested)
             } label: {
