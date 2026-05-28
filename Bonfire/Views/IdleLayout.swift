@@ -110,7 +110,7 @@ struct IdleLayout: View {
             try? controller.start(mode: .forever)
         } label: {
             VStack(spacing: 2) {
-                Label("Keep awake — no timer", systemImage: "infinity")
+                Label("Keep awake", systemImage: "infinity")
                 Text("Your Mac won’t sleep until you turn this off")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
