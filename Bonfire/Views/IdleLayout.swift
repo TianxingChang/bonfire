@@ -103,15 +103,14 @@ struct IdleLayout: View {
         Button {
             showCustom.toggle()
         } label: {
-            HStack(spacing: 2) {
+            HStack(spacing: 3) {
                 Text("Custom")
                 Image(systemName: showCustom ? "chevron.up" : "chevron.down")
                     .font(.caption2)
             }
-            .frame(maxWidth: .infinity)
+            .fixedSize()                // size to content, no truncation
         }
         .buttonStyle(.bordered)
-        .frame(maxWidth: .infinity)
     }
 
     private var customRow: some View {
