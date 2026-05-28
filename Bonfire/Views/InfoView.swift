@@ -15,7 +15,11 @@ struct InfoView: View {
             VStack(alignment: .leading, spacing: 14) {
                 bullet("Your Mac stays awake the whole time, even if you don’t touch it.")
                 bullet("The screen may still dim or turn off — that’s fine, your Mac keeps running underneath.")
-                bullet("Closing the lid keeps it running too, **but only when plugged in**. On battery, closing the lid still puts your Mac to sleep.")
+                bulletWithEmphasis(
+                    pre: "Closing the lid keeps it running too, ",
+                    emphasis: "but only when plugged in",
+                    post: ". On battery, closing the lid still puts your Mac to sleep."
+                )
                 bullet("On battery, Bonfire turns itself off when battery drops below your threshold (default 20%, change in Preferences).")
             }
 
@@ -38,6 +42,22 @@ struct InfoView: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 8, alignment: .leading)
             Text(.init(markdown))
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    /// A bullet with a colored, bold span in the middle.
+    /// Uses Text `+` concatenation so the emphasis wraps inline with the
+    /// surrounding paragraph instead of breaking layout.
+    private func bulletWithEmphasis(pre: String, emphasis: String, post: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text("•")
+                .foregroundStyle(.secondary)
+                .frame(width: 8, alignment: .leading)
+            (Text(pre)
+             + Text(emphasis).foregroundColor(.orange).bold()
+             + Text(post))
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
