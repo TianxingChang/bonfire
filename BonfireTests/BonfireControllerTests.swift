@@ -6,6 +6,7 @@ final class BonfireControllerTests: XCTestCase {
     private var assert: MockAssertionManager!
     private var power: MockPowerMonitor!
     private var notify: MockNotifier!
+    private var bypass: MockBatteryAwakeBypass!
     private var prefs: Preferences!
     private var controller: BonfireController!
     private var clock: TestClock!
@@ -14,16 +15,20 @@ final class BonfireControllerTests: XCTestCase {
         assert = MockAssertionManager()
         power = MockPowerMonitor()
         notify = MockNotifier()
+        bypass = MockBatteryAwakeBypass()
         prefs = Preferences(store: UserDefaults(suiteName: "BonfireCtrl-\(UUID().uuidString)")!)
         clock = TestClock(now: Date(timeIntervalSince1970: 1_000_000))
         controller = BonfireController(
             assertionManager: assert,
             powerMonitor: power,
             notifier: notify,
+            batteryBypass: bypass,
             preferences: prefs,
             clock: clock
         )
     }
+
+    // MARK: - Existing behaviour
 
     func test_startDuration_acquiresAssertionAndBecomesBurning() throws {
         try controller.start(mode: .duration(3600))
@@ -87,6 +92,79 @@ final class BonfireControllerTests: XCTestCase {
         clock.advance(by: 61)
         controller.tick()
         XCTAssertTrue(notify.sent.isEmpty)
+    }
+
+    // MARK: - v2 battery bypass
+
+    func test_bypassPrefOff_neverEngagesBypass() throws {
+        prefs.batteryBypassEnabled = false
+        power.simulate(percent: 80, onAC: false)
+        try controller.start(mode: .duration(3600))
+        XCTAssertEqual(bypass.enableCount, 0)
+        XCTAssertFalse(bypass.isEnabled)
+    }
+
+    func test_startOnBatteryWithBypassPref_engagesBypass() throws {
+        prefs.batteryBypassEnabled = true
+        power.simulate(percent: 80, onAC: false)
+        try controller.start(mode: .duration(3600))
+        XCTAssertEqual(bypass.enableCount, 1)
+        XCTAssertTrue(bypass.isEnabled)
+    }
+
+    func test_startOnACWithBypassPref_doesNotEngageBypass() throws {
+        prefs.batteryBypassEnabled = true
+        power.simulate(percent: 80, onAC: true)
+        try controller.start(mode: .duration(3600))
+        XCTAssertEqual(bypass.enableCount, 0)
+        XCTAssertFalse(bypass.isEnabled)
+    }
+
+    func test_stop_disablesBypassEvenIfNeverEngaged() throws {
+        try controller.start(mode: .duration(3600))
+        controller.stop(reason: .userRequested)
+        XCTAssertEqual(bypass.disableCount, 1) // idempotent disable
+    }
+
+    func test_unplugWhileBurning_engagesBypassWhenPrefOn() throws {
+        prefs.batteryBypassEnabled = true
+        power.simulate(percent: 80, onAC: true)
+        try controller.start(mode: .duration(3600))
+        XCTAssertFalse(bypass.isEnabled)
+
+        power.simulate(percent: 80, onAC: false)
+        XCTAssertTrue(bypass.isEnabled)
+        XCTAssertEqual(bypass.enableCount, 1)
+    }
+
+    func test_replugWhileBurning_disengagesBypass() throws {
+        prefs.batteryBypassEnabled = true
+        power.simulate(percent: 80, onAC: false)
+        try controller.start(mode: .duration(3600))
+        XCTAssertTrue(bypass.isEnabled)
+
+        power.simulate(percent: 80, onAC: true)
+        XCTAssertFalse(bypass.isEnabled)
+    }
+
+    func test_unplugWhileBurning_prefOff_doesNothing() throws {
+        prefs.batteryBypassEnabled = false
+        power.simulate(percent: 80, onAC: true)
+        try controller.start(mode: .duration(3600))
+        power.simulate(percent: 80, onAC: false)
+        XCTAssertFalse(bypass.isEnabled)
+        XCTAssertEqual(bypass.enableCount, 0)
+    }
+
+    func test_lowBatteryStop_alsoDisablesBypass() throws {
+        prefs.batteryBypassEnabled = true
+        power.simulate(percent: 80, onAC: false)
+        try controller.start(mode: .duration(3600))
+        XCTAssertTrue(bypass.isEnabled)
+
+        power.simulate(percent: 19, onAC: false)
+        XCTAssertEqual(controller.state, .idle)
+        XCTAssertFalse(bypass.isEnabled)
     }
 }
 

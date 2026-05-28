@@ -14,10 +14,13 @@ struct BonfireApp: App {
         let assertion = SystemAssertionManager()
         let power = SystemPowerMonitor()
         let notifier = SystemNotifier()
+        let bypass = SystemBatteryAwakeBypass()
+        bypass.resetIfLeftEnabled()    // crash recovery from any previous run
         let ctrl = BonfireController(
             assertionManager: assertion,
             powerMonitor: power,
             notifier: notifier,
+            batteryBypass: bypass,
             preferences: prefs
         )
         _preferences = StateObject(wrappedValue: prefs)

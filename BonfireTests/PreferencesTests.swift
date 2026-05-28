@@ -14,14 +14,17 @@ final class PreferencesTests: XCTestCase {
         XCTAssertEqual(prefs.lowBatteryThreshold, 20)
         XCTAssertTrue(prefs.notifyOnEnd)
         XCTAssertTrue(prefs.launchAtLogin)
+        XCTAssertFalse(prefs.batteryBypassEnabled)   // v2 opt-in, off by default
     }
 
     func test_setAndPersist() {
         prefs.lowBatteryThreshold = 30
         prefs.notifyOnEnd = false
+        prefs.batteryBypassEnabled = true
         let reloaded = Preferences(store: store)
         XCTAssertEqual(reloaded.lowBatteryThreshold, 30)
         XCTAssertFalse(reloaded.notifyOnEnd)
+        XCTAssertTrue(reloaded.batteryBypassEnabled)
     }
 
     func test_thresholdClamping() {

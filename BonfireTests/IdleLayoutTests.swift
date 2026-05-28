@@ -7,8 +7,12 @@ final class IdleLayoutTests: XCTestCase {
         let assert = MockAssertionManager()
         let power = MockPowerMonitor()
         let notify = MockNotifier()
+        let bypass = MockBatteryAwakeBypass()
         let prefs = Preferences(store: UserDefaults(suiteName: "IL-\(UUID())")!)
-        let ctrl = BonfireController(assertionManager: assert, powerMonitor: power, notifier: notify, preferences: prefs)
+        let ctrl = BonfireController(
+            assertionManager: assert, powerMonitor: power, notifier: notify,
+            batteryBypass: bypass, preferences: prefs
+        )
         _ = IdleLayout(controller: ctrl)
     }
 

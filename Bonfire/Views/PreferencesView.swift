@@ -19,6 +19,15 @@ struct PreferencesView: View {
                         Text("\(v)%").tag(v)
                     }
                 }
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle("Keep awake on battery with lid closed", isOn: $preferences.batteryBypassEnabled)
+                    (Text("Advanced — overrides macOS sleep policy. ")
+                     + Text("Requires admin password").bold()
+                     + Text(" the first time it activates per session, and will drain your battery faster than normal."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             Section("About") {
                 Text("Bonfire")
@@ -29,6 +38,6 @@ struct PreferencesView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 380, height: 320)
+        .frame(width: 460, height: 420)
     }
 }

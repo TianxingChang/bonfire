@@ -3,9 +3,10 @@ import Combine
 
 final class Preferences: ObservableObject {
     private enum Key {
-        static let lowBatteryThreshold = "bonfire.lowBatteryThreshold"
+        static let lowBatteryThreshold  = "bonfire.lowBatteryThreshold"
         static let notifyOnEnd          = "bonfire.notifyOnEnd"
         static let launchAtLogin        = "bonfire.launchAtLogin"
+        static let batteryBypassEnabled = "bonfire.batteryBypassEnabled"
     }
 
     static let allowedThresholds: [Int] = [10, 15, 20, 30]
@@ -28,6 +29,9 @@ final class Preferences: ObservableObject {
     @Published var launchAtLogin: Bool {
         didSet { store.set(launchAtLogin, forKey: Key.launchAtLogin) }
     }
+    @Published var batteryBypassEnabled: Bool {
+        didSet { store.set(batteryBypassEnabled, forKey: Key.batteryBypassEnabled) }
+    }
 
     init(store: UserDefaults = .standard) {
         self.store = store
@@ -35,6 +39,7 @@ final class Preferences: ObservableObject {
         self.lowBatteryThreshold = Preferences.clampThreshold(storedThreshold ?? 20)
         self.notifyOnEnd = (store.object(forKey: Key.notifyOnEnd) as? Bool) ?? true
         self.launchAtLogin = (store.object(forKey: Key.launchAtLogin) as? Bool) ?? true
+        self.batteryBypassEnabled = (store.object(forKey: Key.batteryBypassEnabled) as? Bool) ?? false
     }
 
     private static func clampThreshold(_ value: Int) -> Int {

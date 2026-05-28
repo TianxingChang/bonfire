@@ -8,8 +8,12 @@ final class BurningLayoutTests: XCTestCase {
         let assert = MockAssertionManager()
         let power = MockPowerMonitor()
         let notify = MockNotifier()
+        let bypass = MockBatteryAwakeBypass()
         let prefs = Preferences(store: UserDefaults(suiteName: "BL-\(UUID())")!)
-        let ctrl = BonfireController(assertionManager: assert, powerMonitor: power, notifier: notify, preferences: prefs)
+        let ctrl = BonfireController(
+            assertionManager: assert, powerMonitor: power, notifier: notify,
+            batteryBypass: bypass, preferences: prefs
+        )
         try? ctrl.start(mode: .forever)
         _ = BurningLayout(controller: ctrl)
         XCTAssertTrue(true)
