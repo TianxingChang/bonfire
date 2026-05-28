@@ -53,7 +53,7 @@ Two layers of awake-keeping that stack:
 
 Display dimming uses `pmset displaysleepnow` (no admin required).
 
-Full design rationale and trade-offs: [`docs/superpowers/specs/2026-05-27-bonfire-design.md`](docs/superpowers/specs/2026-05-27-bonfire-design.md).
+Full design rationale and trade-offs: [`docs/design.md`](docs/design.md).
 
 ## Building from source
 

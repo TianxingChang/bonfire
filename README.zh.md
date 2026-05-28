@@ -53,7 +53,7 @@
 
 熄屏功能用 `pmset displaysleepnow`（不需要管理员）。
 
-设计细节和取舍权衡：[`docs/superpowers/specs/2026-05-27-bonfire-design.md`](docs/superpowers/specs/2026-05-27-bonfire-design.md)。
+设计细节和取舍权衡：[`docs/design.md`](docs/design.md)。
 
 ## 从源码 build
 
