@@ -6,9 +6,11 @@ import AppKit
 /// Fallback: programmatic `NSBezierPath` icons (template / monochrome) if the bundled
 /// resources are unavailable — keeps the menu bar non-blank even in degraded builds.
 enum IconRenderer {
-    /// Rendered size in points. 22pt fills the menu bar more visibly than the
-    /// 18pt SF Symbols default — good for our colored 3D campfire icons.
-    static let size = NSSize(width: 22, height: 22)
+    /// Rendered size in points. 24pt + the bundled PNGs' built-in 10% top /
+    /// 5% bottom transparent padding gives a centered campfire that visually
+    /// matches its menu bar neighbors (cat/SF Symbol icons all have similar
+    /// internal padding).
+    static let size = NSSize(width: 24, height: 24)
 
     static func idleImage() -> NSImage {
         loadBundled("idle") ?? fallbackIdleImage()
