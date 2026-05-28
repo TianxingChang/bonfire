@@ -45,6 +45,11 @@ struct BonfireApp: App {
             PreferencesView(preferences: preferences)
         }
         .windowResizability(.contentSize)
+
+        Window("About Bonfire", id: "info") {
+            InfoView()
+        }
+        .windowResizability(.contentSize)
     }
 
     private static func startTickerLoop(controller: BonfireController) {

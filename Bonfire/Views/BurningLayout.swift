@@ -3,16 +3,12 @@ import SwiftUI
 struct BurningLayout: View {
     @ObservedObject var controller: BonfireController
     @State private var now: Date = Date()
-    @State private var showInfo = false
+    @Environment(\.openWindow) private var openWindow
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             header
-
-            if showInfo {
-                infoPanel.transition(.opacity)
-            }
 
             VStack(alignment: .leading, spacing: 4) {
                 if let remaining = controller.state.timeLeft(now: now) {
@@ -40,7 +36,6 @@ struct BurningLayout: View {
         .padding(16)
         .frame(width: 360)
         .onReceive(ticker) { now = $0 }
-        .animation(.easeInOut(duration: 0.15), value: showInfo)
     }
 
     // MARK: - Header
@@ -54,34 +49,15 @@ struct BurningLayout: View {
                 .foregroundStyle(.orange)
             Spacer()
             Button {
-                showInfo.toggle()
+                NSApp.activate(ignoringOtherApps: true)
+                openWindow(id: "info")
             } label: {
-                Image(systemName: showInfo ? "info.circle.fill" : "info.circle")
+                Image(systemName: "info.circle")
                     .foregroundStyle(.secondary)
                     .imageScale(.large)
             }
             .buttonStyle(.borderless)
-        }
-    }
-
-    private var infoPanel: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            bullet("Your Mac stays awake even if you don’t touch it.")
-            bullet("Closing the lid keeps it running too, **but only when plugged in**.")
-            bullet("On battery, this turns off automatically when battery drops below your threshold.")
-        }
-        .font(.callout)
-        .foregroundStyle(.secondary)
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(NSColor.controlBackgroundColor).opacity(0.4))
-        .cornerRadius(8)
-    }
-
-    private func bullet(_ markdown: String) -> some View {
-        HStack(alignment: .top, spacing: 6) {
-            Text("•").foregroundStyle(.secondary)
-            Text(.init(markdown))
+            .help("How Bonfire works")
         }
     }
 

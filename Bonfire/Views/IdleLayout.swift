@@ -5,15 +5,11 @@ struct IdleLayout: View {
     @State private var customH: Int = 1
     @State private var customM: Int = 0
     @State private var showCustom = false
-    @State private var showInfo = false
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             header
-
-            if showInfo {
-                infoPanel.transition(.opacity)
-            }
 
             Text("Keep your Mac awake for:")
                 .font(.subheadline)
@@ -32,7 +28,6 @@ struct IdleLayout: View {
         .padding(16)
         .frame(width: 360)
         .animation(.easeInOut(duration: 0.15), value: showCustom)
-        .animation(.easeInOut(duration: 0.15), value: showInfo)
     }
 
     // MARK: - Header
@@ -46,36 +41,15 @@ struct IdleLayout: View {
                 .foregroundStyle(.secondary)
             Spacer()
             Button {
-                showInfo.toggle()
+                NSApp.activate(ignoringOtherApps: true)
+                openWindow(id: "info")
             } label: {
-                Image(systemName: showInfo ? "info.circle.fill" : "info.circle")
+                Image(systemName: "info.circle")
                     .foregroundStyle(.secondary)
                     .imageScale(.large)
             }
             .buttonStyle(.borderless)
             .help("How Bonfire works")
-        }
-    }
-
-    private var infoPanel: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            bullet("Your Mac stays awake the whole time, even if you don’t touch it.")
-            bullet("The screen may still dim or turn off — that’s fine, your Mac keeps running underneath.")
-            bullet("Closing the lid keeps it running too, **but only when plugged in**. On battery, closing the lid still puts the Mac to sleep.")
-            bullet("On battery, Bonfire turns itself off when battery drops below your threshold (default 20%, change in Preferences).")
-        }
-        .font(.callout)
-        .foregroundStyle(.secondary)
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(NSColor.controlBackgroundColor).opacity(0.4))
-        .cornerRadius(8)
-    }
-
-    private func bullet(_ markdown: String) -> some View {
-        HStack(alignment: .top, spacing: 6) {
-            Text("•").foregroundStyle(.secondary)
-            Text(.init(markdown))   // enables **bold** in the strings above
         }
     }
 
