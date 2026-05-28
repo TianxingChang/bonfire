@@ -12,7 +12,6 @@ struct PopoverView: View {
             } else {
                 IdleLayout(controller: controller)
             }
-            Divider()
             HStack {
                 Button("Preferences…") { openPreferences() }
                     .buttonStyle(.borderless)
@@ -22,7 +21,7 @@ struct PopoverView: View {
             }
             .font(.footnote)
             .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.bottom, 12)
         }
     }
 }
