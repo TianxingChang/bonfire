@@ -16,8 +16,10 @@ See `docs/superpowers/specs/2026-05-27-bonfire-design.md` for the design.
 
 ## Install
 
-Download `Bonfire.zip` from the latest release (or `./scripts/build.sh` to build it).
-Unzip and move `Bonfire.app` to `/Applications`.
+Run `./scripts/build.sh`. Two artifacts land in `dist/`:
+
+- `Bonfire.dmg` — double-click, then drag Bonfire onto the Applications shortcut. Best for sharing.
+- `Bonfire.zip` — unzip and move `Bonfire.app` to `/Applications` manually.
 
 First launch: macOS will block ad-hoc-signed apps. Either:
 - Right-click the app → Open → Open in the dialog, OR
