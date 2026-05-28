@@ -27,6 +27,7 @@ targets:
         LSUIElement: true
         CFBundleName: Bonfire
         CFBundleDisplayName: Bonfire
+        CFBundleIconFile: AppIcon
         NSHumanReadableCopyright: "© 2026"
     entitlements:
       path: Bonfire/Bonfire.entitlements
