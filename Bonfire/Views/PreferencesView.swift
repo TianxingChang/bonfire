@@ -22,11 +22,15 @@ struct PreferencesView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Toggle("Keep awake on battery with lid closed", isOn: $preferences.batteryBypassEnabled)
                     (Text("Advanced — overrides macOS sleep policy. ")
-                     + Text("Requires admin password").bold()
-                     + Text(" the first time it activates per session, and will drain your battery faster than normal."))
+                     + Text("Asks for admin password once").bold()
+                     + Text(" (the first time you use it) to install a passwordless permission. After that no more prompts. Battery may drain faster than normal."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                    Text("To revoke: `sudo rm /etc/sudoers.d/bonfire-pmset`")
+                        .font(.caption2.monospaced())
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 2)
                 }
             }
             Section("About") {
