@@ -135,9 +135,3 @@ Bonfire 在 `/Applications` 之外的痕迹很少：
 ## License
 
 MIT 协议。见 [LICENSE](./LICENSE)。
-
-## 致谢
-
-- 图标：3D 篝火渲染
-- 用 Swift / SwiftUI / IOKit 实现
-- 灵感来自 macOS 上一长串「保持唤醒」工具（Amphetamine、KeepingYouAwake、Lungo、Theine）—— Bonfire 的区别点是**电池模式的 sudoers 一次密码方案**

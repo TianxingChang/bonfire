@@ -135,9 +135,3 @@ Bonfire's footprint outside `/Applications` is minimal:
 ## License
 
 MIT. See [LICENSE](./LICENSE).
-
-## Credits
-
-- Icon: 3D campfire render
-- Built with Swift / SwiftUI / IOKit
-- Inspired by the long line of macOS "keep awake" tools (Amphetamine, KeepingYouAwake, Lungo, Theine) — Bonfire's distinguishing feature is the **one-prompt-ever sudoers approach** for battery-mode bypass
