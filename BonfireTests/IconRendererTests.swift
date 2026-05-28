@@ -5,12 +5,12 @@ import AppKit
 final class IconRendererTests: XCTestCase {
     func test_idleIcon_correctSize() {
         let img = IconRenderer.idleImage()
-        XCTAssertEqual(img.size, NSSize(width: 18, height: 18))
+        XCTAssertEqual(img.size, IconRenderer.size)
     }
 
     func test_burningIcon_correctSize() {
         let img = IconRenderer.burningImage()
-        XCTAssertEqual(img.size, NSSize(width: 18, height: 18))
+        XCTAssertEqual(img.size, IconRenderer.size)
     }
 
     func test_burningIcon_isVisuallyDifferentFromIdle() {
