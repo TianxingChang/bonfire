@@ -1,9 +1,33 @@
 import AppKit
 
+/// Provides the menu bar icons.
+///
+/// Primary path: load `idle.png` / `burning.png` from the app bundle (colored 3D assets).
+/// Fallback: programmatic `NSBezierPath` icons (template / monochrome) if the bundled
+/// resources are unavailable — keeps the menu bar non-blank even in degraded builds.
 enum IconRenderer {
     static let size = NSSize(width: 18, height: 18)
 
     static func idleImage() -> NSImage {
+        loadBundled("idle") ?? fallbackIdleImage()
+    }
+
+    static func burningImage() -> NSImage {
+        loadBundled("burning") ?? fallbackBurningImage()
+    }
+
+    // MARK: - Bundle loading
+
+    private static func loadBundled(_ name: String) -> NSImage? {
+        guard let image = NSImage(named: name) else { return nil }
+        image.size = size
+        image.isTemplate = false   // keep original color (orange flame, brown logs)
+        return image
+    }
+
+    // MARK: - Fallback (programmatic, template-style)
+
+    private static func fallbackIdleImage() -> NSImage {
         let img = NSImage(size: size, flipped: false) { rect in
             drawLogs(in: rect)
             return true
@@ -12,7 +36,7 @@ enum IconRenderer {
         return img
     }
 
-    static func burningImage() -> NSImage {
+    private static func fallbackBurningImage() -> NSImage {
         let img = NSImage(size: size, flipped: false) { rect in
             drawLogs(in: rect)
             drawFlame(in: rect)
