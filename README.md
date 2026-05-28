@@ -42,6 +42,42 @@ Grab the latest `Bonfire.dmg` from [Releases](../../releases) → double-click �
 
 That's a one-time step. After the first launch macOS remembers.
 
+## Usage
+
+Click the campfire icon in your menu bar:
+
+**Keep your Mac awake for a fixed time** — click `30m`, `1h`, `2h`, `4h`, or open `Custom ▾` to dial any duration. Bonfire flips to the burning view showing a live countdown. When the timer expires it stops automatically and your Mac returns to normal sleep behavior.
+
+**Keep your Mac awake indefinitely** — click `Keep awake`. Click `Stop` when you're done.
+
+**Pre-emptively turn the screen off** (while keeping the system running) — in the burning view, click `Turn off display`. Useful before closing the lid and walking away. Move the mouse or press a key to wake the screen again.
+
+### What happens while Bonfire is active
+
+- Your Mac stays awake the whole time, even if you don't touch it.
+- The screen may still dim or turn off on its own — that's fine, your Mac keeps running underneath.
+- **Closing the lid keeps it running too — but only when plugged in.** On battery, closing the lid still puts your Mac to sleep, unless you opt into the advanced battery mode below.
+- On battery, Bonfire stops itself when battery drops below your threshold (default 20%) so an unattended run can never drain to zero.
+- The timer survives lid close, screen off, and your absence — it lives in the menu bar app's process, not in anything UI-bound.
+
+### Advanced: battery mode (lid closed, on battery)
+
+By default, macOS forces sleep when you close the lid on battery — there's no way around this from a normal app. Bonfire offers an opt-in workaround:
+
+1. Open `Preferences…` → toggle on **Keep awake on battery with lid closed**.
+2. The next time you start a session on battery, Bonfire asks for your admin password **once** to install a small `sudoers` fragment.
+3. From then on, lid-closed-on-battery just works, silently, forever — across app restarts and reboots.
+
+The fragment grants the admin group passwordless access to **exactly the two pmset commands Bonfire needs**, nothing else:
+
+```
+%admin ALL = (root) NOPASSWD: /usr/bin/pmset -b disablesleep 0, /usr/bin/pmset -b disablesleep 1
+```
+
+To revoke at any time: `sudo rm /etc/sudoers.d/bonfire-pmset`.
+
+⚠️ Battery still drains. The low-battery auto-stop rail still applies — Bonfire turns itself off when battery hits your threshold.
+
 ## How it works
 
 Two layers of awake-keeping that stack:
