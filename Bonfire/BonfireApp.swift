@@ -35,6 +35,7 @@ struct BonfireApp: App {
     var body: some Scene {
         MenuBarExtra {
             PopoverView(controller: controller, preferences: preferences) {
+                NSApp.activate(ignoringOtherApps: true)
                 openWindow(id: "preferences")
             }
         } label: {

@@ -34,6 +34,7 @@ struct InfoView: View {
         }
         .padding(24)
         .frame(width: 480, alignment: .leading)
+        .followsActiveSpace()
     }
 
     private func bullet(_ markdown: String) -> some View {

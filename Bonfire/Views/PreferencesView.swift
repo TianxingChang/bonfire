@@ -43,5 +43,6 @@ struct PreferencesView: View {
         }
         .formStyle(.grouped)
         .frame(width: 460, height: 420)
+        .followsActiveSpace()
     }
 }
